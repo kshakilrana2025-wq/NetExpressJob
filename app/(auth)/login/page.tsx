@@ -13,10 +13,6 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!loginId || !password) {
-      showToast.error('Please fill all fields');
-      return;
-    }
     setLoading(true);
     try {
       const res = await fetch('/api/auth/login', {
@@ -27,12 +23,15 @@ export default function LoginPage() {
       const data = await res.json();
       if (res.ok) {
         showToast.success('Login successful');
-        router.push('/dashboard');
+        // Force navigation after a short delay to ensure toast shows
+        setTimeout(() => {
+          router.push('/dashboard');
+        }, 100);
       } else {
         showToast.error(data.error || 'Login failed');
       }
     } catch (err) {
-      showToast.error('Network error. Try again.');
+      showToast.error('Network error');
     } finally {
       setLoading(false);
     }
