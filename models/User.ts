@@ -6,7 +6,7 @@ export interface IUser extends Document {
   email: string;
   password: string;
   role: 'user' | 'admin' | 'subadmin';
-  subadminRole?: string; // senior_team_leader, team_leader, trainer, etc.
+  subadminRole?: string;
   emailVerified: boolean;
   referralCode: string;
   referredBy?: mongoose.Types.ObjectId;
@@ -15,6 +15,8 @@ export interface IUser extends Document {
   activationTransactionId?: string;
   studentId: string;
   phone: string;
+  otp?: string;
+  otpExpires?: Date;
   createdAt: Date;
   comparePassword(candidate: string): Promise<boolean>;
 }
@@ -37,6 +39,8 @@ const UserSchema = new Schema<IUser>({
   activationTransactionId: { type: String },
   studentId: { type: String, unique: true, required: true },
   phone: { type: String },
+  otp: { type: String },
+  otpExpires: { type: Date },
   createdAt: { type: Date, default: Date.now }
 });
 
