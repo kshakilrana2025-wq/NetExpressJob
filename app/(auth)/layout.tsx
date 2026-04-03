@@ -8,9 +8,6 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'NetExpressJob - Earn with Referrals & Tasks',
   description: 'Bangladeshi trusted online platform for learning and earning',
-  icons: {
-    icon: 'https://i.ibb.co.com/bjcsBPvg/Logo.png',
-  },
 };
 
 export default function RootLayout({
