@@ -6,7 +6,6 @@ import SubAdmin from '@/models/SubAdmin';
 import Setting from '@/models/Setting';
 import { sendOTPEmail } from '@/lib/email/sendEmail';
 import { generateReferralCode } from '@/lib/utils/helpers';
-import { setOtp } from '@/lib/otpStore';
 
 export async function POST(req: NextRequest) {
   await connectToDatabase();
@@ -56,7 +55,8 @@ export async function POST(req: NextRequest) {
   }
 
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
-  setOtp(email, otp);
+  const otpExpires = new Date(Date.now() + 10 * 60 * 1000);
+  await User.findByIdAndUpdate(user._id, { otp, otpExpires });
   await sendOTPEmail(email, otp);
 
   return NextResponse.json({ message: 'OTP sent', studentId });
