@@ -1,24 +1,24 @@
-// lib/otpStore.ts
 interface OtpRecord {
   otp: string;
   expires: number;
 }
 
-const otpStore = new Map<string, OtpRecord>();
+const store = new Map<string, OtpRecord>();
 
-export function setOtp(email: string, otp: string, expiresInMs: number = 10 * 60 * 1000) {
-  otpStore.set(email, { otp, expires: Date.now() + expiresInMs });
+export function setOtp(key: string, otp: string, ttlMs = 10 * 60 * 1000) {
+  store.set(key, { otp, expires: Date.now() + ttlMs });
 }
 
-export function getOtp(email: string): OtpRecord | undefined {
-  const record = otpStore.get(email);
-  if (record && record.expires < Date.now()) {
-    otpStore.delete(email);
+export function getOtp(key: string): OtpRecord | undefined {
+  const record = store.get(key);
+  if (!record) return undefined;
+  if (record.expires < Date.now()) {
+    store.delete(key);
     return undefined;
   }
   return record;
 }
 
-export function deleteOtp(email: string) {
-  otpStore.delete(email);
+export function deleteOtp(key: string) {
+  store.delete(key);
 }
