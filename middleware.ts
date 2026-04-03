@@ -11,7 +11,9 @@ export async function middleware(request: NextRequest) {
 
   // Public paths (no auth required)
   const publicPaths = ['/', '/login', '/register', '/verify-email', '/forgot-password', '/subadmin-login'];
-  if (publicPaths.includes(path) || path.startsWith('/_next') || path.startsWith('/api/auth')) {
+  const isPublicPath = publicPaths.includes(path) || path.startsWith('/_next') || path.startsWith('/api/auth') || path.includes('.');
+
+  if (isPublicPath) {
     return NextResponse.next();
   }
 
@@ -28,12 +30,14 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
-  // For dashboard routes, check activation via API (optional, can be removed for simplicity)
-  // To avoid complexity, we skip activation check in middleware and handle in each page.
-  // But if you want to block unactivated users, add a fetch call here.
+  // For dashboard routes, you can optionally check activation status by calling an API.
+  // To keep middleware fast, we skip it here.
 
   return NextResponse.next();
 }
+
+// Export the middleware function as default
+export default middleware;
 
 export const config = {
   matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
